@@ -1,7 +1,7 @@
 ## TIKTOK-SERVER
 
 ## 架构
-### MVC 结构
+### MVC
 #### 项目 layout
 ```bash
 .
@@ -38,7 +38,7 @@
 └── routes
 ```
 ### 微服务
-// TODO: 待定
+// TODO: 待定(奎托斯)
 
 
 ## 日志方案
