@@ -1,6 +1,6 @@
 module TikTokServer
 
-go 1.18
+go 1.19
 
 require (
 	go.uber.org/zap v1.24.0
