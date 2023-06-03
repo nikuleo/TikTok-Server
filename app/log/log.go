@@ -1,6 +1,7 @@
 package log
 
 import (
+	"fmt"
 	"os"
 	"sync"
 
@@ -37,9 +38,11 @@ func InitLog() {
 
 func logConfig() *zap.Logger {
 
+	homePath := os.Getenv("HOME")
+	fmt.Println("homePath: ", homePath)
 	// 日志文件分割配置
 	fileWriterHook := &lumberjack.Logger{
-		Filename:   "/var/log/tiktokserver/server.log",
+		Filename:   homePath + "/var/log/tiktokserver/server.log",
 		MaxSize:    500, // megabytes
 		MaxBackups: 3,
 		MaxAge:     28,   //days
