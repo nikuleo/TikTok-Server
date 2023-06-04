@@ -10,5 +10,4 @@ func init() {
 
 func main() {
 	defer log.Sync()
-	log.Info("Hello, world.")
 }
