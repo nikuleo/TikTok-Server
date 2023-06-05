@@ -1,7 +1,6 @@
 package log
 
 import (
-	"fmt"
 	"os"
 	"sync"
 
@@ -21,6 +20,12 @@ var (
 	Warn  func(msg string, fields ...zap.Field)
 	Error func(msg string, fields ...zap.Field)
 	Fatal func(msg string, fields ...zap.Field)
+
+	String   = zap.String
+	Int      = zap.Int
+	Err      = zap.Error
+	Any      = zap.Any
+	Duration = zap.Duration
 )
 
 func InitLog() {
@@ -39,7 +44,6 @@ func InitLog() {
 func logConfig() *zap.Logger {
 
 	homePath := os.Getenv("HOME")
-	fmt.Println("homePath: ", homePath)
 	// 日志文件分割配置
 	fileWriterHook := &lumberjack.Logger{
 		Filename:   homePath + "/var/log/tiktokserver/server.log",
