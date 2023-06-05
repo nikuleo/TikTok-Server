@@ -2,6 +2,7 @@ package main
 
 import (
 	"TikTokServer/app/log"
+	"TikTokServer/routes"
 )
 
 func init() {
@@ -10,4 +11,8 @@ func init() {
 
 func main() {
 	defer log.Sync()
+
+	routes.Run()
+
+	log.Info("Server exiting")
 }
