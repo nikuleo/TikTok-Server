@@ -5,7 +5,7 @@
 #### 项目 layout
 ```bash
 .
-├── app
+├── pkg
 │   └── log
 │       └── log.go
 ├── cmd

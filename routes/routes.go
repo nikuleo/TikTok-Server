@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"TikTokServer/app/log"
 	"TikTokServer/middleware"
+	"TikTokServer/pkg/log"
 	"context"
 	"net/http"
 	"os"
