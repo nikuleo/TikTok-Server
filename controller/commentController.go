@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"TikTokServer/app/log"
+	"TikTokServer/pkg/log"
 
 	"github.com/gin-gonic/gin"
 )
