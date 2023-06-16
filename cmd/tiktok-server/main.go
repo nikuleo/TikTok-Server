@@ -1,16 +1,20 @@
 package main
 
 import (
-	"TikTokServer/app/log"
+	"TikTokServer/model"
+	"TikTokServer/pkg/log"
 	"TikTokServer/routes"
 )
 
-func init() {
+func Init() {
 	log.InitLog()
+	model.InitDB()
 }
 
 func main() {
 	defer log.Sync()
+
+	Init()
 
 	routes.Run()
 
