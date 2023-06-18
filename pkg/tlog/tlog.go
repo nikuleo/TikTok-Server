@@ -11,6 +11,7 @@ import (
 
 var (
 	logger *zap.Logger
+	sugar  *zap.SugaredLogger
 	once   sync.Once
 )
 
@@ -20,6 +21,13 @@ var (
 	Warn  func(msg string, fields ...zap.Field)
 	Error func(msg string, fields ...zap.Field)
 	Fatal func(msg string, fields ...zap.Field)
+
+	// wrap sugar
+	Debugf func(template string, args ...interface{})
+	Infof  func(template string, args ...interface{})
+	Warnf  func(template string, args ...interface{})
+	Errorf func(template string, args ...interface{})
+	Fatalf func(template string, args ...interface{})
 
 	String   = zap.String
 	Int      = zap.Int
@@ -31,6 +39,7 @@ var (
 func InitLog() {
 	once.Do(func() {
 		logger = logConfig()
+		sugar = logger.Sugar()
 	})
 
 	Debug = logger.Debug
@@ -38,6 +47,12 @@ func InitLog() {
 	Warn = logger.Warn
 	Error = logger.Error
 	Fatal = logger.Fatal
+
+	Debugf = sugar.Debugf
+	Infof = sugar.Infof
+	Warnf = sugar.Warnf
+	Errorf = sugar.Errorf
+	Fatalf = sugar.Fatalf
 
 }
 
