@@ -1,15 +1,15 @@
 package controller
 
 import (
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 
 	"github.com/gin-gonic/gin"
 )
 
 func PublishAction(ctx *gin.Context) {
-	log.Info("publish action")
+	tlog.Info("publish action")
 }
 
 func GetPublishList(ctx *gin.Context) {
-	log.Info("publish list")
+	tlog.Info("publish list")
 }

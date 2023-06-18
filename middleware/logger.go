@@ -1,13 +1,13 @@
 package middleware
 
 import (
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-func GinLog() gin.HandlerFunc {
+func Gintlog() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		start := time.Now()
 		path := ctx.Request.URL.Path
@@ -18,16 +18,16 @@ func GinLog() gin.HandlerFunc {
 		ctx.Next()
 		userAgent := ctx.Request.UserAgent()
 		duration := time.Since(start)
-		log.Info(
+		tlog.Info(
 			"GIN",
-			log.String("IP", clientIP),
-			log.String("path", path),
-			log.String("method", method),
-			log.Int("status", status),
-			log.String("query", query),
-			log.String("userAgent", userAgent),
-			log.String("error", ctx.Errors.ByType(gin.ErrorTypePrivate).String()),
-			log.Duration("duration", duration),
+			tlog.String("IP", clientIP),
+			tlog.String("path", path),
+			tlog.String("method", method),
+			tlog.Int("status", status),
+			tlog.String("query", query),
+			tlog.String("userAgent", userAgent),
+			tlog.String("error", ctx.Errors.ByType(gin.ErrorTypePrivate).String()),
+			tlog.Duration("duration", duration),
 		)
 	}
 }

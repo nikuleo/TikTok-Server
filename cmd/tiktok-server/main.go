@@ -2,21 +2,21 @@ package main
 
 import (
 	"TikTokServer/model"
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 	"TikTokServer/routes"
 )
 
 func Init() {
-	log.InitLog()
+	tlog.InitLog()
 	model.InitDB()
 }
 
 func main() {
-	defer log.Sync()
+	defer tlog.Sync()
 
 	Init()
 
 	routes.Run()
 
-	log.Info("Server exiting")
+	tlog.Info("Server exiting")
 }

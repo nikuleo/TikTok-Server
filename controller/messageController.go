@@ -1,15 +1,15 @@
 package controller
 
 import (
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 
 	"github.com/gin-gonic/gin"
 )
 
 func MessageAction(c *gin.Context) {
-	log.Info("MessageAction")
+	tlog.Info("MessageAction")
 }
 
 func GetChatMessages(c *gin.Context) {
-	log.Info("GetChatMessages")
+	tlog.Info("GetChatMessages")
 }

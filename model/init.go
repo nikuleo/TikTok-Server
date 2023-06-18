@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	tlog "TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

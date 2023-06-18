@@ -1,16 +1,16 @@
 package controller
 
 import (
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 
 	"github.com/gin-gonic/gin"
 )
 
 func FavoriteAction(ctx *gin.Context) {
 	// TODO:
-	log.Info("FavoriteAction")
+	tlog.Info("FavoriteAction")
 }
 
 func GetFavoriteList(ctx *gin.Context) {
-	log.Info("FavoriteList")
+	tlog.Info("FavoriteList")
 }

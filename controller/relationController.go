@@ -1,23 +1,23 @@
 package controller
 
 import (
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 
 	"github.com/gin-gonic/gin"
 )
 
 func RelationAction(c *gin.Context) {
-	log.Info("RelationAction")
+	tlog.Info("RelationAction")
 }
 
 func GetFollowList(c *gin.Context) {
-	log.Info("GetFollowList")
+	tlog.Info("GetFollowList")
 }
 
 func GetFollowerList(c *gin.Context) {
-	log.Info("GetFollowerList")
+	tlog.Info("GetFollowerList")
 }
 
 func GetFriendList(c *gin.Context) {
-	log.Info("GetFriendList")
+	tlog.Info("GetFriendList")
 }
