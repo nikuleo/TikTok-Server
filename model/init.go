@@ -1,10 +1,12 @@
 package model
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"TikTokServer/pkg/config"
 	"TikTokServer/pkg/tlog"
 
 	"gorm.io/driver/mysql"
@@ -27,7 +29,20 @@ func InitDB() {
 			Colorful:                  false,       // Disable color
 		},
 	)
-	dsn := "niku:123@tcp(127.0.0.1:3307)/TikTokDB?charset=utf8mb4&parseTime=True&loc=Local"
+
+	cfg := config.GetConfig("dbConfig")
+	viper := cfg.Viper
+	// dsn := "niku:123@tcp(127.0.0.1:3307)/TikTokDB?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=%t&loc=%s",
+		viper.GetString("mysql.user"),
+		viper.GetString("mysql.password"),
+		viper.GetString("mysql.host"),
+		viper.GetInt("mysql.port"),
+		viper.GetString("mysql.dbname"),
+		viper.GetString("mysql.charset"),
+		viper.GetBool("mysql.parseTime"),
+		viper.GetString("mysql.loc"),
+	)
 	DB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})
@@ -46,14 +61,14 @@ func InitDB() {
 		tlog.Error(err.Error())
 	}
 	// SetMaxIdleConns 用于设置连接池中空闲连接的最大数量。
-	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxIdleConns(viper.GetInt("mysql.maxIdleConns"))
 
 	// SetMaxOpenConns 设置打开数据库连接的最大数量。
-	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetMaxOpenConns(viper.GetInt("mysql.maxOpenConns"))
 
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(time.Hour)
-	tlog.Info("DB init success", tlog.String("username", "niku"), tlog.String("password", "123"))
+	tlog.Infof("DB init success, user: %s", viper.GetString("mysql.user"))
 }
 
 func GetDB() *gorm.DB {
