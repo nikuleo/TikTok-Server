@@ -6,8 +6,8 @@
 ```bash
 .
 ├── pkg
-│   └── log
-│       └── log.go
+│   └── tlog
+│       └── tlog.go
 ├── cmd
 │   └── tiktok-server
 │       └── main.go

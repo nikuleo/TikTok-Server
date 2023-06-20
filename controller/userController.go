@@ -1,22 +1,22 @@
 package controller
 
 import (
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 
 	"github.com/gin-gonic/gin"
 )
 
 func UserRegister(ctx *gin.Context) {
 	// TODO: implement
-	log.Info("UserRegister")
+	tlog.Info("UserRegister")
 }
 
 func UserLogin(ctx *gin.Context) {
 	// TODO: implement
-	log.Info("UserLogin")
+	tlog.Info("Usertlogin")
 }
 
 func GetUserInfo(ctx *gin.Context) {
 	// TODO: implement
-	log.Info("UserInfo")
+	tlog.Info("UserInfo")
 }

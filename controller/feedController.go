@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Feed(ctx *gin.Context) {
-	log.Info("feedController")
+	tlog.Info("feedController")
 }

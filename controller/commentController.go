@@ -1,15 +1,15 @@
 package controller
 
 import (
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 
 	"github.com/gin-gonic/gin"
 )
 
 func CommentAction(c *gin.Context) {
-	log.Info("CommentAction")
+	tlog.Info("CommentAction")
 }
 
 func GetCommentList(c *gin.Context) {
-	log.Info("CommentList")
+	tlog.Info("CommentList")
 }

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"TikTokServer/middleware"
-	"TikTokServer/pkg/log"
+	"TikTokServer/pkg/tlog"
 	"context"
 	"net/http"
 	"os"
@@ -29,7 +29,7 @@ func Run() {
 	go func() {
 		// 服务连接
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal("listen: %s\n", log.Err(err))
+			tlog.Fatal("listen: %s\n", tlog.Err(err))
 		}
 	}()
 
@@ -39,7 +39,7 @@ func Run() {
 }
 
 func getRoutes() {
-	douyin := router.Group("/douyin", middleware.GinLog())
+	douyin := router.Group("/douyin", middleware.Gintlog())
 	addUserRoutes(douyin)
 	addFeedRoutes(douyin)
 	addPublishRoutes(douyin)
@@ -53,15 +53,15 @@ func gracefulExit(server *http.Server) {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)
 	sig := <-ch
-	log.Info("receive exit signal", log.Any("", sig))
+	tlog.Info("receive exit signal", tlog.Any("", sig))
 	now := time.Now()
 	cxt, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	err := server.Shutdown(cxt)
 	if err != nil {
-		log.Error("server shutdown error", log.Err(err))
+		tlog.Error("server shutdown error", tlog.Err(err))
 	}
 
 	// 实际退出所耗费的时间
-	log.Info("------exited--------", log.Duration("duration:", time.Since(now)))
+	tlog.Info("------exited--------", tlog.Duration("duration:", time.Since(now)))
 }
