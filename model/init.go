@@ -22,11 +22,11 @@ func InitDB() {
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 		logger.Config{
-			SlowThreshold:             time.Second, // Slow SQL threshold
-			LogLevel:                  logger.Warn, // Log level
-			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
-			ParameterizedQueries:      true,        // Don't include params in the SQL log
-			Colorful:                  false,       // Disable color
+			SlowThreshold:             time.Millisecond * 100, // Slow SQL threshold
+			LogLevel:                  logger.Info,            // Log level
+			IgnoreRecordNotFoundError: true,                   // Ignore ErrRecordNotFound error for logger
+			ParameterizedQueries:      true,                   // Don't include params in the SQL log
+			// Colorful:                  false,                  // Disable color
 		},
 	)
 
@@ -51,7 +51,8 @@ func InitDB() {
 		tlog.Error(err.Error())
 	}
 
-	if err := DB.AutoMigrate(); err != nil {
+	// 自动迁移, 若模型在数据库中不存在，则会自动创建对应的表，若已存在，则会检查字段是否发生变化，若发生变化，则会修改表结构
+	if err := DB.AutoMigrate(&User{}, &Video{}, &Comment{}, &Relation{}, &Message{}); err != nil {
 		tlog.Error(err.Error())
 	}
 
