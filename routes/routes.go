@@ -39,7 +39,7 @@ func Run() {
 }
 
 func getRoutes() {
-	douyin := router.Group("/douyin", middleware.Gintlog())
+	douyin := router.Group("/douyin", middleware.Gintlog(), middleware.GinRecovery(tlog.Logger, true))
 	addUserRoutes(douyin)
 	addFeedRoutes(douyin)
 	addPublishRoutes(douyin)
