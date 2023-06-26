@@ -1,0 +1,4 @@
+JWT:
+  secret: "tiktok"
+  expireHour: 2
+  refreshExpireHour: 168 
