@@ -20,6 +20,8 @@ func GetConfig(cfgName string) Config {
 
 	viper.SetConfigName(cfgName)
 	viper.AddConfigPath(".config")
+	viper.AddConfigPath("../.config")
+	viper.AddConfigPath("../../.config")
 
 	if err := viper.ReadInConfig(); err != nil {
 		tlog.Fatalf("reading config: %s, failed: %s", cfgName, err.Error())
