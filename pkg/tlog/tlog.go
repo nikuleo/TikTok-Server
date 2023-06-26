@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	logger *zap.Logger
+	Logger *zap.Logger
 	sugar  *zap.SugaredLogger
 	once   sync.Once
 )
@@ -38,15 +38,15 @@ var (
 
 func InitLog() {
 	once.Do(func() {
-		logger = logConfig()
-		sugar = logger.Sugar()
+		Logger = logConfig()
+		sugar = Logger.Sugar()
 	})
 
-	Debug = logger.Debug
-	Info = logger.Info
-	Warn = logger.Warn
-	Error = logger.Error
-	Fatal = logger.Fatal
+	Debug = Logger.Debug
+	Info = Logger.Info
+	Warn = Logger.Warn
+	Error = Logger.Error
+	Fatal = Logger.Fatal
 
 	Debugf = sugar.Debugf
 	Infof = sugar.Infof
@@ -134,5 +134,5 @@ func logConfig() *zap.Logger {
 }
 
 func Sync() {
-	logger.Sync()
+	Logger.Sync()
 }
