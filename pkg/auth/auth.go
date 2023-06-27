@@ -51,14 +51,17 @@ func CreateToken(userID int64, userName string) (token string, err error) {
 }
 
 func ValidateToken(requestToken string) (bool, error) {
-	_, err := jwt.Parse(requestToken, func(token *jwt.Token) (any, error) {
+	token, err := jwt.Parse(requestToken, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return secret, nil
+		return secret, nil // HS256 对称加密（公钥与私钥相同），若非对称加密则这里填写公钥(私钥签署， 公钥验证)
 	})
 	if err != nil {
 		return false, err
+	}
+	if _, ok := token.Claims.(*JwtClaims); !ok && !token.Valid {
+		return false, fmt.Errorf("token is invalid")
 	}
 	return true, nil
 }
