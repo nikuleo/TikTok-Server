@@ -47,3 +47,7 @@
 
 ## 路由
 - gin
+
+## 错误代码封装
+> https://github.com/marmotedu/sample-code
+> 使用该仓库的错误代码方案
