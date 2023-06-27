@@ -3,7 +3,7 @@ package middleware
 import (
 	"TikTokServer/pkg/auth"
 	"TikTokServer/pkg/errorcode"
-	response "TikTokServer/pkg/respponse"
+	response "TikTokServer/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
