@@ -1,39 +1,50 @@
 package errorcode
 
-import "fmt"
-
-type ErrCode struct {
-	Code int
-	Msg  string
-}
+import (
+	"errors"
+)
 
 type HttpError struct {
-	HttpCode int
-	ErrCode
+	ErrCode    int    // 错误码
+	HttpStatus int    // http 状态码, REST API 风格
+	Msg        string // 暴露给客户端的信息
+	Err        error  // 原始错误 log 与 错误类型判断信息
 }
 
-func (e ErrCode) Error() string {
-	return fmt.Sprintf("code: %d, msg: %s", e.Code, e.Msg)
-}
-
-func NewErrorCode(code int, msg string) ErrCode {
-	return ErrCode{
-		Code: code,
-		Msg:  msg,
+func (e HttpError) Error() string {
+	if e.Err != nil {
+		return e.Err.Error()
 	}
+	return e.Msg
 }
 
-func NewHttpErr(code, httpCode int, msg string) HttpError {
-	return HttpError{
-		HttpCode: httpCode,
-		ErrCode: ErrCode{
-			Code: code,
-			Msg:  msg,
-		},
+// 重写 Unwarp 方法，保证一致性
+func (e HttpError) Unwarp() error {
+	return e.Err
+}
+
+// 重写 Dig 方法
+func (e HttpError) Dig() HttpError {
+	var he HttpError
+	if errors.As(e.Err, &he) {
+		return he.Dig()
 	}
-}
-
-func (e ErrCode) WithMsg(msg string) ErrCode {
-	e.Msg = msg
 	return e
+}
+
+func NewHttpErr(code, httpCode int, msg string, err error) HttpError {
+	return HttpError{
+		ErrCode:    code,
+		HttpStatus: httpCode,
+		Msg:        msg,
+		Err:        err,
+	}
+}
+
+func (e *HttpError) SetMsg(msg string) {
+	e.Msg = msg
+}
+
+func (e *HttpError) SetError(err error) {
+	e.Err = err
 }
