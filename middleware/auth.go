@@ -17,7 +17,9 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 
 		userID, err := auth.GetUserIDByToken(tokenRequest)
 		if err != nil && userID == int64(-1) {
-			response.Fail(c, errorcode.ErrHttpTokenInvalid, nil)
+			errCode := errorcode.ErrHttpTokenInvalid
+			errCode.SetError(err)
+			response.Fail(c, errCode, nil)
 			c.Abort()
 		}
 		c.Set("userID", userID)
