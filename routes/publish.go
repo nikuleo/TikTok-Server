@@ -10,6 +10,6 @@ import (
 func addPublishRoutes(rg *gin.RouterGroup) {
 	publish := rg.Group("/publish")
 
-	publish.POST("/action/", controller.PublishAction, middleware.JwtAuthMiddleware())
+	publish.POST("/action/", middleware.JwtAuthMiddleware(), controller.PublishAction)
 	publish.GET("/list/", controller.GetPublishList)
 }

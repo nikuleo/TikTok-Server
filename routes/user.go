@@ -10,7 +10,7 @@ import (
 func addUserRoutes(rg *gin.RouterGroup) {
 	user := rg.Group("/user")
 
-	user.GET("/", controller.GetUserInfo, middleware.JwtAuthMiddleware())
+	user.GET("/", middleware.JwtAuthMiddleware(), controller.GetUserInfo)
 	user.POST("/register/", controller.UserRegister)
 	user.POST("/login/", controller.UserLogin)
 }
