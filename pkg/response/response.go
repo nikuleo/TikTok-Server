@@ -62,7 +62,7 @@ func WrapHttpErr(c *gin.Context, e errorcode.HttpError, data interface{}) {
 	getValue := reflect.ValueOf(data)
 	field := getValue.Elem().FieldByName("StatusMsg")
 	if field.CanSet() {
-		field.SetString(e.Msg)
+		field.SetString(e.Msg + e.Error())
 		// protobuf 字段是指针类型，需要用 reflect.ValueOf(&e.Msg)
 		// field.Set(reflect.ValueOf(&e.Msg))
 	} else {
