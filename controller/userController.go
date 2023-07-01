@@ -64,6 +64,6 @@ func GetUserInfo(ctx *gin.Context) {
 		response.Fail(ctx, err, nil)
 		return
 	}
-
+	tlog.Infof("userInfo: %v", resp)
 	response.Success(ctx, errorcode.HttpSuccess, resp)
 }

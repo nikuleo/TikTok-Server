@@ -14,10 +14,10 @@ type JwtClaims struct {
 	jwt.RegisteredClaims
 }
 
-type JwtRefreshClaims struct {
-	ID int64 `json:"user_id"`
-	jwt.RegisteredClaims
-}
+// type JwtRefreshClaims struct {
+// 	ID int64 `json:"user_id"`
+// 	jwt.RegisteredClaims
+// }
 
 var (
 	secret     []byte
@@ -34,7 +34,6 @@ func InitJWT() {
 }
 
 func CreateToken(userID int64, userName string) (token string, err error) {
-	//FIXME: middleware err: token is expired by 12.031758694s
 	expireTime := time.Now().Add(time.Hour * time.Duration(expireHour))
 	claims := &JwtClaims{
 		ID:   userID,
