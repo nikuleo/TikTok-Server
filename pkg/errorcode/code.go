@@ -4,6 +4,12 @@ import (
 	code "github.com/marmotedu/sample-code"
 )
 
+// 密钥错误
+const (
+	_ = iota + code.ErrSecretNotFound
+	ErrSecretEmpty
+)
+
 // HTTP Error
 var (
 	HttpSuccess              = NewHttpErr(0, 200, "OK", nil)
@@ -31,6 +37,7 @@ var (
 	ErrHttpUserNotFound      = NewHttpErr(code.ErrUserNotFound, 404, "User not found", nil)
 	ErrHttpUserAlreadyExist  = NewHttpErr(code.ErrUserAlreadyExist, 400, "User already exist", nil)
 	ErrHttpReachMaxCount     = NewHttpErr(code.ErrReachMaxCount, 400, "password or username reach the max count", nil)
+	ErrHttpSecretEmptyData   = NewHttpErr(ErrSecretEmpty, 400, "密码后用户名不能为空", nil)
 	ErrHttpSecretNotFound    = NewHttpErr(code.ErrSecretNotFound, 404, "Secret not found", nil)
 )
 

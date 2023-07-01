@@ -20,7 +20,7 @@ func TestSuccess(t *testing.T) {
 	Success(ctx, nil, nil)
 	Success(ctx, he, &message.DouyinUserResponse{
 		StatusCode: int32(he.ErrCode),
-		StatusMsg:  nil,
+		StatusMsg:  "",
 		User:       nil,
 	})
 	Success(ctx, dbErr, nil)
