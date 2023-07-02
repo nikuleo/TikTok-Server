@@ -2,6 +2,7 @@ package main
 
 import (
 	"TikTokServer/model"
+	"TikTokServer/pkg/auth"
 	"TikTokServer/pkg/tlog"
 	"TikTokServer/routes"
 )
@@ -9,6 +10,7 @@ import (
 func Init() {
 	tlog.InitLog()
 	model.InitDB()
+	auth.InitJWT()
 }
 
 func main() {

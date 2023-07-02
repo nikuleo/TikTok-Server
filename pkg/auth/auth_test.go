@@ -28,7 +28,7 @@ func TestValidateToken(t *testing.T) {
 }
 
 func TestGetUserIDByToken(t *testing.T) {
-	token, err := CreateToken(2233, "niku")
+	token, err := CreateToken(1, "niku")
 	fmt.Println("token:", token, err)
 	userID, err := GetUserIDByToken(token)
 	fmt.Println("userID:", userID, err)
