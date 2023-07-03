@@ -49,8 +49,6 @@ func GetUserInfo(ctx *gin.Context) {
 
 	userID := ctx.Query("user_id")
 	authID, _ := ctx.Get("userID")
-	tlog.Debugf("userID: %v", userID)
-	tlog.Debugf("authID: %v, %t", authID, authID)
 	aID := authID.(int64)
 
 	if strconv.FormatInt(aID, 10) != userID {

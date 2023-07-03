@@ -100,19 +100,23 @@ func GetUserInfo(userID int64) (*message.DouyinUserResponse, error) {
 	}
 
 	resp := &message.DouyinUserResponse{
-		User: &message.User{
-			Id:              int64(user.ID),
-			Name:            user.UserName,
-			FollowCount:     int64(user.FollowingCount),
-			FollowerCount:   int64(user.FollowerCount),
-			IsFollow:        false,
-			Avatar:          user.Avatar,
-			BackgroundImage: user.BackgroundImage,
-			Signature:       user.Signature,
-			TotalFavorited:  int64(len(user.FavoriteVideo)),
-			WorkCount:       int64(user.WorkCount),
-			FavoriteCount:   int64(len(user.FavoriteVideo)),
-		},
+		User: PackUserInfo(user),
 	}
 	return resp, nil
+}
+
+func PackUserInfo(user *model.User) *message.User {
+	return &message.User{
+		Id:              int64(user.ID),
+		Name:            user.UserName,
+		FollowCount:     user.FollowingCount,
+		FollowerCount:   user.FollowerCount,
+		IsFollow:        false,
+		Avatar:          user.Avatar,
+		BackgroundImage: user.BackgroundImage,
+		Signature:       user.Signature,
+		TotalFavorited:  int64(len(user.FavoriteVideo)),
+		WorkCount:       user.WorkCount,
+		FavoriteCount:   int64(len(user.FavoriteVideo)),
+	}
 }

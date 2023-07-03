@@ -11,10 +11,10 @@ type User struct {
 	UserName        string  `gorm:"type:varchar(32);not null;index:idx_username,unique;"`
 	Password        string  `gorm:"type:varchar(80);not null;"`
 	FavoriteVideo   []Video `gorm:"many2many:user_favorite_videos;"`
-	TotalFavorited  int     `gorm:"default:0;"`
-	WorkCount       int     `gorm:"default:0;"`
-	FollowingCount  int     `gorm:"default:0;"`
-	FollowerCount   int     `gorm:"default:0;"`
+	TotalFavorited  int64   `gorm:"default:0;"`
+	WorkCount       int64   `gorm:"default:0;"`
+	FollowingCount  int64   `gorm:"default:0;"`
+	FollowerCount   int64   `gorm:"default:0;"`
 	Avatar          string  `gorm:"type:varchar(255);default:NULL;"`
 	BackgroundImage string  `gorm:"type:varchar(255);default:NULL;"`
 	Signature       string  `gorm:"type:varchar(255);default:NULL;"`
