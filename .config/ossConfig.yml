@@ -1,0 +1,6 @@
+OSS:
+  endpoint: "oss-cn-beijing.aliyuncs.com"
+  bucketName: "tiktokserver"
+  accessKeyIdPath: "/home/niku/data/API key/.keyID"
+  accessKeySecretPath: "/home/niku/data/API key/.keySecret"
+  prefix: "https://tiktokserver.oss-cn-beijing.aliyuncs.com/"
