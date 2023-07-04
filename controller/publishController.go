@@ -5,13 +5,51 @@ import (
 	"TikTokServer/pkg/response"
 	"TikTokServer/pkg/tlog"
 	"TikTokServer/service"
+	"fmt"
+	"math"
+	"math/rand"
+	"os"
+	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func PublishAction(ctx *gin.Context) {
 	tlog.Info("publish action")
+	userID, _ := ctx.Get("userID")
+	aID := userID.(int64)
+	title := ctx.PostForm("title")
+	videoData, err := ctx.FormFile("data")
+	if err != nil {
+		errCode := errorcode.ErrHttpBind
+		errCode.SetError(err)
+		response.Fail(ctx, errCode, nil)
+		return
+	}
+	fileName := filepath.Base(videoData.Filename)
+
+	rand.Seed(time.Now().UnixNano())
+	fileName = fmt.Sprintf("%d_%s", rand.Intn(math.MaxInt32), fileName)
+
+	homePath := os.Getenv("HOME")
+	savePath := filepath.Join(homePath, "/tmp/tiktokserver/video/", fileName)
+
+	if err := ctx.SaveUploadedFile(videoData, savePath); err != nil {
+		response.Fail(ctx, err, nil)
+		return
+	}
+
+	resp, err := service.PublishAction(aID, title, fileName, savePath)
+
+	if err != nil {
+		tlog.Errorf(err.Error(), resp)
+		response.Fail(ctx, err, nil)
+		return
+	}
+
+	response.Success(ctx, errorcode.HttpSuccess, resp)
 }
 
 func GetPublishList(ctx *gin.Context) {
