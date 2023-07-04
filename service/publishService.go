@@ -22,6 +22,14 @@ func PublishList(authID, userID int64) (*message.DouyinPublishListResponse, erro
 	return resp, nil
 }
 
+func PublishAction(userID int64, title, fileName, savePath string) (*message.DouyinPublishActionResponse, error) {
+	//TODO:
+	// 上传视频到云存储
+	// filePath, err := ossBucket.UploadFileToOss(fileName, savePath, "video/")
+
+	return nil, nil
+}
+
 func PackVideoList(videos []*model.Video, userID int64) []*message.Video {
 	//TODO: follow list & fav list, 写完关注接口与点赞后修改
 
