@@ -12,6 +12,6 @@ func init() {
 }
 
 func TestUploadFileToOss(t *testing.T) {
-	ossPath, err := UploadFileToOss("test.jpeg", "/home/niku/图片/test/test.jpeg", "covers/")
+	ossPath, err := UploadCoverToOss("test.jpeg", "/home/niku/图片/test/test.jpeg")
 	fmt.Println("ossPath:", ossPath, err)
 }
