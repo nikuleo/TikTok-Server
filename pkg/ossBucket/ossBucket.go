@@ -52,7 +52,7 @@ func OssInit() {
 	tlog.Infof("bucketInfo: %v", bucketInfo)
 }
 
-func UploadFileToOss(fileName string, filePath string, objPath string) (string, error) {
+func UploadVideoToOss(fileName string, filePath string) (string, error) {
 	bucket, err := client.Bucket(bucketName)
 	if err != nil {
 		errCode := errorcode.ErrHttpOssConnectFailed
@@ -60,7 +60,27 @@ func UploadFileToOss(fileName string, filePath string, objPath string) (string, 
 		tlog.Errorf(errCode.Error(), err)
 		return "", errCode
 	}
-	objectName := objPath + fileName
+	objectName := "videos/" + fileName
+	err = bucket.PutObjectFromFile(objectName, filePath, oss.Progress(&OssProgressListener{}))
+	if err != nil {
+		errCode := errorcode.ErrHttpOssBucketUploadFailed
+		errCode.SetError(err)
+		tlog.Errorf(errCode.Error(), err)
+		return "", err
+	}
+
+	return prefix + objectName, nil
+}
+
+func UploadCoverToOss(fileName string, filePath string) (string, error) {
+	bucket, err := client.Bucket(bucketName)
+	if err != nil {
+		errCode := errorcode.ErrHttpOssConnectFailed
+		errCode.SetError(err)
+		tlog.Errorf(errCode.Error(), err)
+		return "", errCode
+	}
+	objectName := "covers/" + fileName
 	err = bucket.PutObjectFromFile(objectName, filePath, oss.Progress(&OssProgressListener{}))
 	if err != nil {
 		errCode := errorcode.ErrHttpOssBucketUploadFailed
