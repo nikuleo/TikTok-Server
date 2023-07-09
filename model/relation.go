@@ -4,10 +4,10 @@ import "gorm.io/gorm"
 
 type Relation struct {
 	gorm.Model
-	User       User `gorm:"foreignKey:UserID;"`
-	UserID     int  `gorm:"index:idx_userid,unique; not null;"`
-	ToUser     User `gorm:"foreignKey:UserID;"`
-	FollowerID int  `gorm:"index:idx_userid,unique; index:idx_to_userid; not null;"`
+	User       User  `gorm:"foreignKey:UserID;"`
+	UserID     int64 `gorm:"index:idx_userid,unique; not null;"`
+	ToUser     User  `gorm:"foreignKey:UserID;"`
+	FollowerID int64 `gorm:"index:idx_userid,unique; index:idx_to_userid; not null;"`
 }
 
 func (Relation) TableName() string {
