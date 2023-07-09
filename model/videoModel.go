@@ -1,21 +1,22 @@
 package model
 
 import (
-	"time"
+	"TikTokServer/pkg/errorcode"
+	"TikTokServer/pkg/util"
 
 	"gorm.io/gorm"
 )
 
 type Video struct {
 	gorm.Model
-	PublishTime   time.Time `gorm:"not null; index:idx_publish_time;"`
-	Author        User      `gorm:"foreignKey:AuthorID;"`
-	AuthorID      int64     `gorm:"index:idx_author_id; not null;"`
-	PlayUrl       string    `gorm:"type:varchar(255); not null;"`
-	CoverUrl      string    `gorm:"type:varchar(255); not null;"`
-	FavoriteCount int64     `gorm:"default:0;"`
-	CommentCount  int64     `gorm:"default:0;"`
-	Title         string    `gorm:"type:varchar(64); not null;"`
+	PublishTime   int64  `gorm:"not null; index:idx_publish_time;"`
+	Author        User   `gorm:"foreignKey:AuthorID;"`
+	AuthorID      int64  `gorm:"index:idx_author_id; not null;"`
+	PlayUrl       string `gorm:"type:varchar(255); not null;"`
+	CoverUrl      string `gorm:"type:varchar(255); not null;"`
+	FavoriteCount int64  `gorm:"default:0;"`
+	CommentCount  int64  `gorm:"default:0;"`
+	Title         string `gorm:"type:varchar(64); not null;"`
 }
 
 func (Video) TableName() string {
@@ -43,4 +44,37 @@ func GetVideoListByUserID(userID int64) ([]*Video, error) {
 	}
 
 	return videos, nil
+}
+
+func CreateVideo(userID int64, videoUrl, coverUrl, title string) error {
+	video := &Video{
+		AuthorID:      userID,
+		PlayUrl:       videoUrl,
+		CoverUrl:      coverUrl,
+		Title:         title,
+		PublishTime:   util.GetCurrentTime(),
+		FavoriteCount: 0,
+		CommentCount:  0,
+	}
+	err := db.Transaction(func(tx *gorm.DB) error {
+		err := tx.Create(video).Error
+		if err != nil {
+			return err
+		}
+
+		res := tx.Model(&User{}).Where("ID = ?", userID).Update("work_count", gorm.Expr("work_count + ?", 1))
+
+		if res.Error != nil {
+			return res.Error
+		}
+
+		if res.RowsAffected != 1 {
+			errCode := errorcode.ErrHttpDatabase
+			errCode.Msg = "插入视频时查询到的用户数不为1"
+			return errCode
+		}
+
+		return nil
+	})
+	return err
 }

@@ -4,6 +4,11 @@ import (
 	message "TikTokServer/idl/gen"
 	"TikTokServer/model"
 	"TikTokServer/pkg/errorcode"
+	"TikTokServer/pkg/ossBucket"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
 )
 
 func PublishList(authID, userID int64) (*message.DouyinPublishListResponse, error) {
@@ -23,11 +28,30 @@ func PublishList(authID, userID int64) (*message.DouyinPublishListResponse, erro
 }
 
 func PublishAction(userID int64, title, fileName, savePath string) (*message.DouyinPublishActionResponse, error) {
-	//TODO:
-	// 上传视频到云存储
-	// filePath, err := ossBucket.UploadFileToOss(fileName, savePath, "video/")
+	videoUrl, err := ossBucket.UploadVideoToOss(fileName, savePath)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	coverPath, coverName, err := GetImageFile(savePath)
+	if err != nil {
+		return nil, err
+	}
+	// tlog.Debugf("coverPath: %s", coverPath)
+	coverUrl, err := ossBucket.UploadCoverToOss(coverName, coverPath)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = model.CreateVideo(userID, videoUrl, coverUrl, title)
+	if err != nil {
+		errCode := errorcode.ErrHttpDatabase
+		errCode.SetError(err)
+		return nil, errCode
+	}
+
+	return &message.DouyinPublishActionResponse{}, nil
 }
 
 func PackVideoList(videos []*model.Video, userID int64) []*message.Video {
@@ -48,4 +72,20 @@ func PackVideoList(videos []*model.Video, userID int64) []*message.Video {
 		videoList[i] = video
 	}
 	return videoList
+}
+
+// 视屏 FFmpeg 截取视频封面
+func GetImageFile(videoPath string) (string, string, error) {
+	temp := strings.Split(videoPath, "/")
+	videoName := temp[len(temp)-1]
+	b := []byte(videoName)
+	coverName := string(b[:len(b)-3]) + "jpg"
+	homePath := os.Getenv("HOME")
+	coverPath := filepath.Join(homePath, "/tmp/tiktokserver/cover/", coverName)
+	cmd := exec.Command("ffmpeg", "-i", videoPath, "-ss", "1", "-f", "image2", "-t", "0.01", "-y", coverPath)
+	err := cmd.Run()
+	if err != nil {
+		return "", "", err
+	}
+	return coverPath, coverName, nil
 }
