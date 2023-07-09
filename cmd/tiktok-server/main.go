@@ -3,6 +3,7 @@ package main
 import (
 	"TikTokServer/model"
 	"TikTokServer/pkg/auth"
+	"TikTokServer/pkg/ossBucket"
 	"TikTokServer/pkg/tlog"
 	"TikTokServer/routes"
 )
@@ -11,6 +12,7 @@ func Init() {
 	tlog.InitLog()
 	model.InitDB()
 	auth.InitJWT()
+	ossBucket.OssInit()
 }
 
 func main() {
