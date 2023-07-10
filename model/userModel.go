@@ -10,7 +10,7 @@ type User struct {
 	gorm.Model
 	UserName        string  `gorm:"type:varchar(32);not null;index:idx_username,unique;"`
 	Password        string  `gorm:"type:varchar(80);not null;"`
-	FavoriteVideo   []Video `gorm:"many2many:user_favorite_videos;"`
+	FavoriteVideos  []Video `gorm:"many2many:user_favorite_videos;"`
 	TotalFavorited  int64   `gorm:"default:0;"`
 	WorkCount       int64   `gorm:"default:0;"`
 	FollowingCount  int64   `gorm:"default:0;"`
