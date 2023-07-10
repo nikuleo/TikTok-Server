@@ -23,8 +23,22 @@ func (Video) TableName() string {
 	return "video"
 }
 
-func GetVideoList(videoIDs []int64) ([]*Video, error) {
-	return nil, nil
+func GetVideoListByTime(latestTime int64, limit int) ([]*Video, error) {
+	videos := make([]*Video, 0)
+
+	if err := db.Limit(limit).Order("publish_time desc").Find(&videos, "publish_time < ?", latestTime).Error; err != nil {
+		return nil, err
+	}
+
+	for i, v := range videos {
+		author, err := GetUserByID(v.AuthorID)
+		if err != nil {
+			return videos, err
+		}
+		videos[i].Author = *author
+	}
+
+	return videos, nil
 }
 
 func GetVideoListByUserID(userID int64) ([]*Video, error) {
