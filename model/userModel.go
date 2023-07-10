@@ -30,7 +30,7 @@ func GetUserByID(userID int64) (*User, error) {
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	tlog.Infof("User: %v", user)
+	// tlog.Infof("User: %v", user)
 	return user, nil
 }
 
