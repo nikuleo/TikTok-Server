@@ -14,6 +14,12 @@ func FavoriteAction(ctx *gin.Context) {
 	tlog.Info("FavoriteAction")
 	var err error
 	videoID, err := strconv.ParseInt(ctx.Query("video_id"), 10, 64)
+
+	if err != nil {
+		response.Fail(ctx, errorcode.ErrHttpBind, nil)
+		return
+	}
+
 	actionType, err := strconv.ParseInt(ctx.Query("action_type"), 10, 64)
 	userID, _ := ctx.Get("userID")
 	authID := userID.(int64)
