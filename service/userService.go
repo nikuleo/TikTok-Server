@@ -115,8 +115,8 @@ func PackUserInfo(user *model.User) *message.User {
 		Avatar:          user.Avatar,
 		BackgroundImage: user.BackgroundImage,
 		Signature:       user.Signature,
-		TotalFavorited:  int64(len(user.FavoriteVideos)),
+		TotalFavorited:  user.TotalFavorited,
 		WorkCount:       user.WorkCount,
-		FavoriteCount:   int64(len(user.FavoriteVideos)),
+		FavoriteCount:   user.FavoriteCount,
 	}
 }

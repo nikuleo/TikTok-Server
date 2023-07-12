@@ -54,7 +54,7 @@ func InitDB() {
 	}
 
 	// 自动迁移, 若模型在数据库中不存在，则会自动创建对应的表，若已存在，则会检查字段是否发生变化，若发生变化，则会修改表结构
-	if err := db.AutoMigrate(&User{}, &Video{}, &Comment{}, &Relation{}, &Message{}); err != nil {
+	if err := db.AutoMigrate(&User{}, &Video{}, &Comment{}, &Relation{}, &Message{}, &Friend{}); err != nil {
 		tlog.Error(err.Error())
 	}
 
