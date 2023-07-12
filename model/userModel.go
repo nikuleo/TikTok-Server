@@ -15,6 +15,7 @@ type User struct {
 	WorkCount       int64   `gorm:"default:0;"`
 	FollowingCount  int64   `gorm:"default:0;"`
 	FollowerCount   int64   `gorm:"default:0;"`
+	FavoriteCount   int64   `gorm:"default:0;"`
 	Avatar          string  `gorm:"type:varchar(255);default:NULL;"`
 	BackgroundImage string  `gorm:"type:varchar(255);default:NULL;"`
 	Signature       string  `gorm:"type:varchar(255);default:NULL;"`
