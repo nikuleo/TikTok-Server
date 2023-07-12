@@ -9,9 +9,9 @@ import (
 
 func addRelationRoutes(rg *gin.RouterGroup) {
 
-	relation := rg.Group("/relation")
+	relation := rg.Group("/relation", middleware.JwtAuthMiddleware())
 
-	relation.POST("/action/", middleware.JwtAuthMiddleware(), controller.RelationAction)
+	relation.POST("/action/", controller.RelationAction)
 	relation.GET("follow/list/", controller.GetFollowList)
 	relation.GET("follower/list/", controller.GetFollowerList)
 	relation.GET("friend/list/", controller.GetFriendList)
