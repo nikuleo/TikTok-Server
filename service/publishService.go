@@ -55,7 +55,25 @@ func PublishAction(userID int64, title, fileName, savePath string) (*message.Dou
 }
 
 func PackVideoList(videos []*model.Video, userID int64) []*message.Video {
-	//TODO: follow list & fav list, 写完关注接口与点赞后修改
+	//TODO: 需要 redis 优化
+
+	followList, err := model.GetFollowList(userID)
+	if err != nil {
+		return nil
+	}
+	favList, err := model.GetFavoriteList(userID)
+	if err != nil {
+		return nil
+	}
+
+	followMap := make(map[int64]struct{})
+	favMap := make(map[int64]struct{})
+	for _, v := range followList {
+		followMap[int64(v.ID)] = struct{}{}
+	}
+	for _, v := range favList {
+		favMap[int64(v.ID)] = struct{}{}
+	}
 
 	videoList := make([]*message.Video, len(videos))
 	for i, v := range videos {
@@ -68,6 +86,12 @@ func PackVideoList(videos []*model.Video, userID int64) []*message.Video {
 			IsFavorite:    false,
 			Author:        PackUserInfo(&v.Author),
 			Title:         v.Title,
+		}
+		if _, ok := followMap[int64(v.Author.ID)]; ok {
+			video.Author.IsFollow = true
+		}
+		if _, ok := favMap[int64(v.ID)]; ok {
+			video.IsFavorite = true
 		}
 		videoList[i] = video
 	}
