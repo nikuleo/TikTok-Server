@@ -45,6 +45,18 @@ func Favorite(userID, videoID int64) error {
 			return errCode
 		}
 
+		// 更新视频作者的 TotalFavorited 字段
+		res = tx.Model(User{}).Where("id = ?", video.AuthorID).Update("total_favorited", gorm.Expr("total_favorited + ?", 1))
+		if res.Error != nil {
+			return res.Error
+		}
+
+		if res.RowsAffected != 1 {
+			errCode := errorcode.ErrHttpDatabase
+			errCode.SetMsg("更新字段数量大于1")
+			return errCode
+		}
+
 		return nil
 	})
 	return err
@@ -81,6 +93,18 @@ func DisFavorite(userID, videoID int64) error {
 		}
 
 		res = tx.Model(user).Update("favorite_count", gorm.Expr("favorite_count - ?", 1))
+		if res.Error != nil {
+			return res.Error
+		}
+
+		if res.RowsAffected != 1 {
+			errCode := errorcode.ErrHttpDatabase
+			errCode.SetMsg("更新字段数量大于1")
+			return errCode
+		}
+
+		// 更新视频作者的 TotalFavorited 字段
+		res = tx.Model(User{}).Where("id = ?", video.AuthorID).Update("total_favorited", gorm.Expr("total_favorited - ?", 1))
 		if res.Error != nil {
 			return res.Error
 		}
