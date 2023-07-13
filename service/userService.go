@@ -106,6 +106,16 @@ func GetUserInfo(userID int64) (*message.DouyinUserResponse, error) {
 }
 
 func PackUserInfo(user *model.User) *message.User {
+	// TODO: 需要 redis 优化
+	// videoList, err := model.GetVideoListByUserID(int64(user.ID))
+	// if err != nil {
+	// 	return nil
+	// }
+	// totalFavCount := int64(0)
+	// for _, video := range videoList {
+	// 	totalFavCount += video.FavoriteCount
+	// }
+
 	return &message.User{
 		Id:              int64(user.ID),
 		Name:            user.UserName,
