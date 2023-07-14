@@ -1,0 +1,33 @@
+version: '1.0'
+
+services:
+
+  mysql:
+    image: mysql
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_USER: niku # 设置 Mysql 用户名称
+      MYSQL_PASSWORD: 123 # 设置 Mysql 用户密码
+    ports:
+      - 3307:3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+  # redis:
+  #   image: redis
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #   privileged: true
+  #   volumes:
+  #     - ./data/redis:/data                 # 引用 .env 配置中 DATA_PATH_HOST 变量，将宿主机上存放 Redis 数据的目录挂载到容器中 /data 目录
+  #     - ./redis/redis.conf/:/usr/local/etc/redis.conf
+  #     - ./redis/data:/usr/local/redis/data
+  #     - ./redis/redis.log:/usr/local/redis/redis.log
+  #   ports:
+  #     - "6379:6379"                          # 设置容器6379端口映射指定宿主机端口
+  #   restart: always
+  #   container_name: redis
