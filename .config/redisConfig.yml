@@ -1,0 +1,5 @@
+redis:
+  address: 127.0.0.1
+  network: tcp
+  port: 6379
+  auth: 123
