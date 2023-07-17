@@ -1,2 +1,4 @@
 go.sum
 .vscode
+docker/mysql
+docker/redis/log
