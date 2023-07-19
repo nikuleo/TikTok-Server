@@ -2,3 +2,5 @@ go.sum
 .vscode
 docker/mysql
 docker/redis/log
+docker/redis/data/appendonlydir/appendonly.aof
+docker/redis/data/dump.rdb
