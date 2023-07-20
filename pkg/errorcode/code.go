@@ -17,6 +17,12 @@ const (
 	ErrOssBucketUploadFailed
 )
 
+// 缓存错误
+const (
+	_ = iota + code.ErrDatabase
+	ErrCache
+)
+
 // HTTP Error
 var (
 	HttpSuccess                  = NewHttpErr(0, 200, "OK", nil)
@@ -25,6 +31,7 @@ var (
 	ErrHttpValidation            = NewHttpErr(code.ErrValidation, 400, "Validation failed", nil)
 	ErrHttpTokenInvalid          = NewHttpErr(code.ErrTokenInvalid, 401, "Token invalid", nil)
 	ErrHttpDatabase              = NewHttpErr(code.ErrDatabase, 500, "Database error", nil)
+	ErrHttpCache                 = NewHttpErr(ErrCache, 500, "Cache error", nil)
 	ErrHttpEncrypt               = NewHttpErr(code.ErrEncrypt, 401, "Error occurred while encrypting the user password", nil)
 	ErrHttpSignatureInvalid      = NewHttpErr(code.ErrSignatureInvalid, 401, "Signature is invalid", nil)
 	ErrHttpExpired               = NewHttpErr(code.ErrExpired, 401, "Token expired", nil)
