@@ -35,6 +35,17 @@ func GetUserByID(userID int64) (*User, error) {
 	return user, nil
 }
 
+func MutilGetUserByID(userIDs []int64) ([]*User, error) {
+	users := make([]*User, 0)
+	if len(userIDs) == 0 {
+		return users, nil
+	}
+	if err := db.Where("id in ?", userIDs).Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
 func CreateUser(userName, password string) (*User, error) {
 	user := &User{
 		UserName:        userName,
@@ -51,11 +62,11 @@ func CreateUser(userName, password string) (*User, error) {
 	return user, nil
 }
 
-func QuaryUser(userName string) (*User, error) {
+func QuaryUserByName(userName string) (*User, error) {
 	user := &User{}
 	result := db.Where("user_name = ?", userName).Take(&user)
-	tlog.Debugf("QuaryUser: ", result.Error)
-	tlog.Debugf("user: %v", user)
+	// tlog.Debugf("QuaryUser: ", result.Error)
+	// tlog.Debugf("user: %v", user)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 			return nil, nil
