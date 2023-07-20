@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// authID 为当前用户ID, userID 目标用户ID （场景： 我点开了目标用户的发布列表）
 func PublishList(authID, userID int64) (*message.DouyinPublishListResponse, error) {
 
 	videos, err := model.GetVideoListByUserID(userID)
@@ -55,13 +56,11 @@ func PublishAction(userID int64, title, fileName, savePath string) (*message.Dou
 }
 
 func PackVideoList(videos []*model.Video, userID int64) []*message.Video {
-	//TODO: 需要 redis 优化
-
-	followList, err := model.GetFollowList(userID)
+	followList, err := getFollowUserIDs(userID)
 	if err != nil {
 		return nil
 	}
-	favList, err := model.GetFavoriteList(userID)
+	favList, err := getUserFavVideoIDList(userID)
 	if err != nil {
 		return nil
 	}
@@ -69,10 +68,10 @@ func PackVideoList(videos []*model.Video, userID int64) []*message.Video {
 	followMap := make(map[int64]struct{})
 	favMap := make(map[int64]struct{})
 	for _, v := range followList {
-		followMap[int64(v.ID)] = struct{}{}
+		followMap[v] = struct{}{}
 	}
 	for _, v := range favList {
-		favMap[int64(v.ID)] = struct{}{}
+		favMap[v] = struct{}{}
 	}
 
 	videoList := make([]*message.Video, len(videos))

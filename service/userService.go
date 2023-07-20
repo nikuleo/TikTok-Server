@@ -1,10 +1,12 @@
 package service
 
 import (
+	"TikTokServer/cache"
 	message "TikTokServer/idl/gen"
 	"TikTokServer/model"
 	"TikTokServer/pkg/auth"
 	"TikTokServer/pkg/errorcode"
+	"TikTokServer/pkg/tlog"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,7 +19,7 @@ func UserRegister(userName string, password string) (*message.DouyinUserRegister
 	if len(userName) == 0 || len(password) == 0 {
 		return nil, errorcode.ErrHttpSecretEmptyData
 	}
-	user, err := model.QuaryUser(userName)
+	user, err := model.QuaryUserByName(userName)
 	if err != nil {
 		errCode := errorcode.ErrHttpDatabase
 		errCode.SetError(err)
@@ -61,7 +63,7 @@ func UserLogin(userName string, password string) (*message.DouyinUserLoginRespon
 	if len(userName) > 32 || len(password) > 32 {
 		return nil, errorcode.ErrHttpReachMaxCount
 	}
-	user, err := model.QuaryUser(userName)
+	user, err := model.QuaryUserByName(userName)
 	if err != nil {
 		errCode := errorcode.ErrHttpDatabase
 		errCode.SetError(err)
@@ -90,7 +92,23 @@ func UserLogin(userName string, password string) (*message.DouyinUserLoginRespon
 }
 
 func GetUserInfo(userID int64) (*message.DouyinUserResponse, error) {
+	// 先查 redis 缓存
+	userInfo, err := cache.GetUserInfo(userID)
+	tlog.Debugf("GetUserInfo: %v, error: %v", userInfo, err)
+	if err != nil {
+		errCode := errorcode.ErrHttpCache
+		errCode.SetError(err)
+		return nil, errCode
+	}
 
+	resp := &message.DouyinUserResponse{}
+
+	if userInfo != nil {
+		resp.User = userInfo
+		return resp, nil
+	}
+
+	// 缓存未命中，从数据库中查询再缓存
 	user, err := model.GetUserByID(userID)
 
 	if err != nil {
@@ -99,23 +117,13 @@ func GetUserInfo(userID int64) (*message.DouyinUserResponse, error) {
 		return nil, errCode
 	}
 
-	resp := &message.DouyinUserResponse{
-		User: PackUserInfo(user),
-	}
+	resp.User = PackUserInfo(user)
+	cache.SetUserInfo(userID, resp.User)
+
 	return resp, nil
 }
 
 func PackUserInfo(user *model.User) *message.User {
-	// TODO: 需要 redis 优化
-	// videoList, err := model.GetVideoListByUserID(int64(user.ID))
-	// if err != nil {
-	// 	return nil
-	// }
-	// totalFavCount := int64(0)
-	// for _, video := range videoList {
-	// 	totalFavCount += video.FavoriteCount
-	// }
-
 	return &message.User{
 		Id:              int64(user.ID),
 		Name:            user.UserName,

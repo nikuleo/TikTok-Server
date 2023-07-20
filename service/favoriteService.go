@@ -1,6 +1,7 @@
 package service
 
 import (
+	"TikTokServer/cache"
 	message "TikTokServer/idl/gen"
 	"TikTokServer/model"
 	"TikTokServer/pkg/errorcode"
@@ -44,4 +45,30 @@ func GetFavoriteList(authID, userID int64) (*message.DouyinFavoriteListResponse,
 	tlog.Infof("resp: %v", resp)
 
 	return resp, nil
+}
+
+func getUserFavVideoIDList(userID int64) ([]int64, error) {
+	videoIDs, err := cache.GetUserFavVideos(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(videoIDs) != 0 {
+		return videoIDs, nil
+	}
+	videoList, err := model.GetFavoriteList(userID)
+	if err != nil {
+		return nil, err
+	}
+	videoIDs = make([]int64, len(videoList))
+	for i, video := range videoList {
+		videoIDs[i] = int64(video.ID)
+	}
+	if len(videoIDs) != 0 {
+		err = cache.SetUserFavVideos(userID, videoIDs)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return videoIDs, nil
 }
