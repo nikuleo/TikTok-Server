@@ -18,8 +18,8 @@ var (
 	RdbUserFavorite  *redis.Client
 	RdbUserFollowing *redis.Client
 
-	RdbVideoFarvite *redis.Client
-	RdbVideoComment *redis.Client
+	RdbVideoFavorite *redis.Client
+	RdbVideoComment  *redis.Client
 )
 
 // InitRedis 初始化Redis连接。
@@ -46,7 +46,7 @@ func InitRedis() {
 		DB:       2, // 关注列表信息信息存入 DB2.
 	})
 
-	RdbVideoFarvite = redis.NewClient(&redis.Options{
+	RdbVideoFavorite = redis.NewClient(&redis.Options{
 		Addr:     address + ":" + port,
 		Password: password,
 		DB:       3, //  视频点赞信息存入 DB3.
