@@ -1,6 +1,7 @@
 package service
 
 import (
+	"TikTokServer/cache"
 	message "TikTokServer/idl/gen"
 	"TikTokServer/model"
 	"TikTokServer/pkg/errorcode"
@@ -20,20 +21,37 @@ func CommentAction(authID, videoID, actionType int64, commentText string, commen
 		errCode.SetError(err)
 		return nil, errCode
 	}
-
+	// TODO:  通知消息队列删除缓存
 	return &message.DouyinCommentActionResponse{}, nil
 }
 
 func CommentList(userID, videoID int64) (*message.DouyinCommentListResponse, error) {
-	commets, err := model.GetCommentList(videoID)
-
+	// 从缓存中获取评论列表
+	commentsMessage, err := cache.GetVideoCommentFromCache(videoID)
+	if err != nil {
+		errCode := errorcode.ErrHttpCache
+		errCode.SetError(err)
+		return nil, errCode
+	}
+	resp := &message.DouyinCommentListResponse{}
+	if commentsMessage != nil {
+		resp.CommentList = commentsMessage
+		return resp, nil
+	}
+	// 缓存未命中，从数据库中获取后存入缓存
+	comments, err := model.GetCommentList(videoID)
 	if err != nil {
 		errCode := errorcode.ErrHttpDatabase
 		errCode.SetError(err)
 		return nil, errCode
 	}
-	resp := &message.DouyinCommentListResponse{
-		CommentList: PackCommentList(commets, userID),
+	commentsMessage = PackCommentList(comments, userID)
+	resp.CommentList = commentsMessage
+	err = cache.SetVideoCommentToCache(videoID, commentsMessage)
+	if err != nil {
+		errCode := errorcode.ErrHttpCache
+		errCode.SetError(err)
+		return nil, errCode
 	}
 	return resp, nil
 }
