@@ -15,10 +15,10 @@ func init() {
 
 func TestUserInfoCache(t *testing.T) {
 	userInfo := &message.User{
-		Id:              1,
+		Id:              0,
 		Name:            "niku",
-		FollowCount:     1,
-		FollowerCount:   1,
+		FollowCount:     0,
+		FollowerCount:   0,
 		Avatar:          "miku",
 		BackgroundImage: "bg",
 		Signature:       "嘿嘿嘿",
@@ -85,4 +85,31 @@ func TestUserFollowingCache(t *testing.T) {
 		t.Error(err)
 	}
 	fmt.Println("Del userFollowing: ", userFollowing)
+}
+
+func TestCommentCache(t *testing.T) {
+	comments := []*message.Comment{}
+	for i := 0; i < 10; i++ {
+		comment := &message.Comment{
+			Id:         int64(i),
+			User:       nil,
+			Content:    "comment" + strconv.Itoa(i),
+			CreateDate: "2021-01-01",
+		}
+		comments = append(comments, comment)
+	}
+
+	err := SetVideoCommentToCache(1, comments)
+	if err != nil {
+		t.Error(err)
+	}
+
+	getComments, err := GetVideoCommentFromCache(1)
+	if err != nil {
+		t.Error(err)
+	}
+	for _, comment := range getComments {
+		fmt.Printf("comment: %+v \n", comment)
+	}
+	// fmt.Printf("getComments: %+v \n", getComments)
 }

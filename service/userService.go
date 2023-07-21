@@ -6,7 +6,6 @@ import (
 	"TikTokServer/model"
 	"TikTokServer/pkg/auth"
 	"TikTokServer/pkg/errorcode"
-	"TikTokServer/pkg/tlog"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -94,7 +93,6 @@ func UserLogin(userName string, password string) (*message.DouyinUserLoginRespon
 func GetUserInfo(userID int64) (*message.DouyinUserResponse, error) {
 	// 先查 redis 缓存
 	userInfo, err := cache.GetUserInfo(userID)
-	tlog.Debugf("GetUserInfo: %v, error: %v", userInfo, err)
 	if err != nil {
 		errCode := errorcode.ErrHttpCache
 		errCode.SetError(err)

@@ -151,9 +151,9 @@ type Message struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                     // 消息id
-	ToUserId   int64  `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`       // 该消息接收者的id
-	FromUserId int64  `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"` // 该消息发送者的id
+	Id         int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id"`                                     // 消息id
+	ToUserId   int64  `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id"`       // 该消息接收者的id
+	FromUserId int64  `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id"` // 该消息发送者的id
 	Content    string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`                            // 消息内容
 	CreateTime string `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`    // 消息创建时间
 }
