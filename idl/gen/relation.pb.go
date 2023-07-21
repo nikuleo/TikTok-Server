@@ -499,8 +499,8 @@ type FriendUser struct {
 
 	Message         string `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`                                        // 和该好友的最新聊天消息
 	MsgType         int64  `protobuf:"varint,2,opt,name=msgType,proto3" json:"msgType,omitempty"`                                       // message消息的类型，0 => 当前请求用户接收的消息， 1 => 当前请求用户发送的消息
-	Id              int64  `protobuf:"varint,3,opt,name=id,proto3" json:"id,omitempty"`                                                 // 用户id
-	Name            string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`                                              // 用户名称
+	Id              int64  `protobuf:"varint,3,opt,name=id,proto3" json:"id"`                                                 // 用户id
+	Name            string `protobuf:"bytes,4,opt,name=name,proto3" json:"name"`                                              // 用户名称
 	FollowCount     int64  `protobuf:"varint,5,opt,name=follow_count,json=followCount,proto3" json:"follow_count,omitempty"`            // 关注总数
 	FollowerCount   int64  `protobuf:"varint,6,opt,name=follower_count,json=followerCount,proto3" json:"follower_count,omitempty"`      // 粉丝总数
 	IsFollow        bool   `protobuf:"varint,7,opt,name=is_follow,json=isFollow,proto3" json:"is_follow,omitempty"`                     // true-已关注，false-未关注
