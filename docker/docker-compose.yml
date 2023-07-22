@@ -32,3 +32,16 @@ services:
     command: "redis-server /etc/redis/redis.conf"
     restart: always
     container_name: redis
+
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    container_name: 'rabbitmq3.8'
+    restart: always
+    environment:
+        - RABBITMQ_DEFAULT_USER=niku
+        - RABBITMQ_DEFAULT_PASS=123
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ./rabbitmq/data:/var/lib/rabbitmq
