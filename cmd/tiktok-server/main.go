@@ -6,6 +6,7 @@ import (
 	"TikTokServer/pkg/auth"
 	"TikTokServer/pkg/ossBucket"
 	"TikTokServer/pkg/tlog"
+	"TikTokServer/rabbitmq"
 	"TikTokServer/routes"
 )
 
@@ -15,10 +16,12 @@ func Init() {
 	auth.InitJWT()
 	ossBucket.OssInit()
 	cache.InitRedis()
+	rabbitmq.InitRabbitMQ()
 }
 
 func main() {
 	defer tlog.Sync()
+	defer rabbitmq.MQClose()
 
 	Init()
 
