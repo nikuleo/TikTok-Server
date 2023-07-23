@@ -48,6 +48,7 @@
 ├── controller                  # 控制层
 ├── service                     # 服务层
 ├── cache                       # redis 缓存层
+├── rabbitmq                    # 消息队列
 ├── model                       # 持久化层
 ├── middleware                  # gin 中间件
 ├── pkg                         # 公共包
