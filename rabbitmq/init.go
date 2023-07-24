@@ -10,6 +10,7 @@ import (
 
 var (
 	MQConn *amqp.Connection
+	Retry  int
 )
 
 func InitRabbitMQ() {
@@ -19,6 +20,7 @@ func InitRabbitMQ() {
 	port := cfg.GetString("rabbitmq.port")
 	user := cfg.GetString("rabbitmq.user")
 	password := cfg.GetString("rabbitmq.password")
+	Retry = cfg.GetInt("rabbitmq.retry")
 
 	amqpURL := fmt.Sprintf("amqp://%s:%s@%s:%s/", user, password, address, port)
 	MQConn, err = amqp.Dial(amqpURL)
