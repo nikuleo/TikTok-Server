@@ -3,3 +3,4 @@ rabbitmq:
   port: 5672
   user: niku
   password: 123
+  retry: 2
