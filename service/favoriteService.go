@@ -6,16 +6,31 @@ import (
 	"TikTokServer/model"
 	"TikTokServer/pkg/errorcode"
 	"TikTokServer/pkg/tlog"
+	"TikTokServer/rabbitmq"
+	"fmt"
 )
 
 func FavoriteAction(videoID, userID, actionType int64) (*message.DouyinFavoriteActionResponse, error) {
 	var err error
+	msg := fmt.Sprintf("%d %d", userID, videoID)
+
+	// 使用消息队列优化
 	if actionType == 1 {
-		err = model.Favorite(userID, videoID)
+		// err = model.Favorite(userID, videoID)
+		err = cache.SetVideoFavoriteUserToCache(videoID, userID)
+		if err != nil {
+			return nil, err
+		}
+		err = rabbitmq.SendFavoriteMsg(msg)
 	}
 
 	if actionType == 2 {
-		err = model.DisFavorite(userID, videoID)
+		// err = model.DisFavorite(userID, videoID)
+		err = cache.DelVideoFavoriteUserInCache(videoID, userID)
+		if err != nil {
+			return nil, err
+		}
+		err = rabbitmq.SendDisFavoriteMsg(msg)
 	}
 
 	if err != nil {
