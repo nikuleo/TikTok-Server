@@ -10,12 +10,14 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: TikTokDB
       MYSQL_USER: niku # 设置 Mysql 用户名称
       MYSQL_PASSWORD: 123 # 设置 Mysql 用户密码
     ports:
       - 3307:3306
     volumes:
-      - ./mysql:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/init/:/docker-entrypoint-initdb.d/
 
   redis:
     image: redis
