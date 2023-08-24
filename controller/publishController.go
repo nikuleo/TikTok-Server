@@ -6,7 +6,6 @@ import (
 	"TikTokServer/pkg/tlog"
 	"TikTokServer/service"
 	"fmt"
-	"math"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -32,8 +31,9 @@ func PublishAction(ctx *gin.Context) {
 
 	// rand.Seed(time.Now().UnixNano())
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	currentTime := time.Now().UnixNano()
 
-	fileName = fmt.Sprintf("%d_%s", r.Intn(math.MaxInt32), fileName)
+	fileName = fmt.Sprintf("%d_%d_%s", r.Intn(100000), currentTime, fileName)
 
 	homePath := os.Getenv("HOME")
 	savePath := filepath.Join(homePath, "/tmp/tiktokserver/video/", fileName)
