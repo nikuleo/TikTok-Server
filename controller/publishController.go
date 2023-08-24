@@ -30,8 +30,10 @@ func PublishAction(ctx *gin.Context) {
 	}
 	fileName := filepath.Base(videoData.Filename)
 
-	rand.Seed(time.Now().UnixNano())
-	fileName = fmt.Sprintf("%d_%s", rand.Intn(math.MaxInt32), fileName)
+	// rand.Seed(time.Now().UnixNano())
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	fileName = fmt.Sprintf("%d_%s", r.Intn(math.MaxInt32), fileName)
 
 	homePath := os.Getenv("HOME")
 	savePath := filepath.Join(homePath, "/tmp/tiktokserver/video/", fileName)
