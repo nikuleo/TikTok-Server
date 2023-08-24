@@ -24,6 +24,8 @@ func RelationAction(authID, toUserID, actionType int64) (*message.DouyinRelation
 		return nil, errCode
 	}
 	// TODO: 使用消息队列异步删除缓存
+	cache.DelUserFollowing(authID)
+
 	return &message.DouyinRelationActionResponse{}, nil
 }
 
@@ -57,7 +59,7 @@ func GetFollowList(userID int64) (*message.DouyinRelationFollowListResponse, err
 	return resp, nil
 }
 
-// 通过缓存的 ID 优化循环查询
+// 通过缓存的 ID 优化循环查询, mutilGet 非循环查询，而是将多个 ID 拼接成一个 SQL 语句
 func GetFollowListByUserIDs(userIDs []int64) ([]*message.User, error) {
 
 	followUserList, err := model.MutilGetUserByID(userIDs)
