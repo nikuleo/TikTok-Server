@@ -14,7 +14,7 @@
 
 若有问题或建议欢迎 issue 讨论，十分感谢 :smiley_cat:  
 
-> **_API文档:_**
+> **_API文档:_**  
 > [极简抖音APIfox](https://apifox.com/apidoc/shared-09d88f32-0b6c-4157-9d07-a36d32d7a75c/api-50707523)  
 > [app 客户端文档](https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7#quPkfu)
 
@@ -83,7 +83,14 @@ docker-compose up -d
     ├── gen
     └── proto
 ```
+### 服务架构图示
+![server_arch](./pic/server_arch.png "Arch")
+
+### MySQL 实体关系
+![SQLER](./pic/mysql-ER.png "mysql ER")
+
 ## redis 缓存配置
+配置文件见 `docker/redis` 目录中的 `redis.conf` 文件。
 - 最大内存限制 100mb （电脑内存小，docker 启动 redis 内存占用太高）
 - 开启超出内存调度策略 LFU
 - 启动主动整理内存碎片
@@ -93,8 +100,33 @@ docker-compose up -d
 读写分离，读操作先去缓存查未命中在查 DB。  
 写操作先更新数据库，再删除缓存。其中删除缓存操作使用消息队列重试缓存删除。
 
+### 缓存 KV 设计
+#### 用户信息  
+直接将需要返回的用户信息结构体序列化后使用 string 结构存储。  
+|  KEY   | VALUE  |
+|  ----  | ----  |
+| user:ID  | string |
+
+#### 关注关系
+使用 set 存储当前用户关注的所有用户 ID。  
+|  KEY   | VALUE  |
+|  ----  | ----  |
+| user:ID  | id |
+
+#### 点赞关系
+使用 set 存储，某用户的全部点赞视频    
+|  KEY   | VALUE  |
+|  ----  | ----  |
+| user:ID  | videoID |
+
+使用 set 存储，某视频的全部点赞用户    
+|  KEY   | VALUE  |
+|  ----  | ----  |
+| video:ID  | userID |
+
 ### 仅做部分缓
-> **_NOTE:_**  时间有限，只做了部分缓存，后续有时间再完善
+> **_NOTE:_**    
+> 时间有限，只做了部分缓存(userInfo; relation; favorite; comment)，后续有时间再完善  
 > 还想加一个定时任务，定期将点赞信息持久化到 DB
 
 ## RabbitMQ 消息队列  
@@ -104,7 +136,7 @@ kafka 有些麻烦，换用 rabbitMQ 作为消息队列。
 
 ## 日志方案
 - zap
-- lumberjack
+- lumberjack  
 分级日志（Debug，Info，warn，error，Fatal）。    
 终端日志与文件日志分离，终端日志使用彩色输出。  
 日志文件按大小自动分割保存。
