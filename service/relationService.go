@@ -5,10 +5,18 @@ import (
 	message "TikTokServer/idl/gen"
 	"TikTokServer/model"
 	"TikTokServer/pkg/errorcode"
+	"TikTokServer/pkg/util"
+	"context"
+	"time"
 )
 
 func RelationAction(authID, toUserID, actionType int64) (*message.DouyinRelationActionResponse, error) {
 	var err error
+	lockKey := "relationID:" + util.I64ToString(authID)
+	lockvalue := util.I64ToString(toUserID)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*20))
+	defer cancel()
+	err = cache.Lock(ctx, lockKey, lockvalue)
 
 	if actionType == 1 {
 		err = model.FollowAction(authID, toUserID)
@@ -25,7 +33,8 @@ func RelationAction(authID, toUserID, actionType int64) (*message.DouyinRelation
 	}
 	// TODO: 使用消息队列异步删除缓存
 	cache.DelUserFollowing(authID)
-
+	cache.DelUserInfo(authID)
+	cache.UnLock(lockKey, lockvalue)
 	return &message.DouyinRelationActionResponse{}, nil
 }
 
@@ -33,7 +42,12 @@ func RelationAction(authID, toUserID, actionType int64) (*message.DouyinRelation
 func GetFollowList(userID int64) (*message.DouyinRelationFollowListResponse, error) {
 
 	// 从缓存中获取关注列表
-	userList, err := getFollowListFromCache(userID)
+	isLocked, _ := cache.CheckLock("relationID:" + util.I64ToString(userID))
+	var userList []*message.User
+	var err error
+	if !isLocked {
+		userList, err = getFollowListFromCache(userID)
+	}
 	if err != nil {
 		errCode := errorcode.ErrHttpCache
 		errCode.SetError(err)

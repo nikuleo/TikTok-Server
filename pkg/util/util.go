@@ -24,3 +24,7 @@ func ConvtStrSliceToInt64Slice(strSlice []string) ([]int64, error) {
 
 	return intSlice, nil
 }
+
+func I64ToString(num int64) string {
+	return strconv.FormatInt(num, 10)
+}
