@@ -5,10 +5,18 @@ import (
 	message "TikTokServer/idl/gen"
 	"TikTokServer/model"
 	"TikTokServer/pkg/errorcode"
+	"TikTokServer/pkg/util"
+	"context"
+	"time"
 )
 
 func CommentAction(authID, videoID, actionType int64, commentText string, commentID int64) (*message.DouyinCommentActionResponse, error) {
 	var err error
+	lockKey := "commentID:" + util.I64ToString(videoID)
+	lockValue := util.I64ToString(authID)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*20))
+	defer cancel()
+	err = cache.Lock(ctx, lockKey, lockValue)
 	if actionType == 1 {
 		err = model.CreateComment(authID, videoID, commentText)
 	}
@@ -22,12 +30,20 @@ func CommentAction(authID, videoID, actionType int64, commentText string, commen
 		return nil, errCode
 	}
 	// TODO:  通知消息队列删除缓存
+	cache.DelVideoCommentCache(videoID)
+	cache.UnLock(lockKey, lockValue)
 	return &message.DouyinCommentActionResponse{}, nil
 }
 
 func CommentList(userID, videoID int64) (*message.DouyinCommentListResponse, error) {
 	// 从缓存中获取评论列表
-	commentsMessage, err := cache.GetVideoCommentFromCache(videoID)
+	lockKey := "commentID:" + util.I64ToString(videoID)
+	isLocked, _ := cache.CheckLock(lockKey)
+	var commentsMessage []*message.Comment
+	var err error
+	if !isLocked {
+		commentsMessage, err = cache.GetVideoCommentFromCache(videoID)
+	}
 	if err != nil {
 		errCode := errorcode.ErrHttpCache
 		errCode.SetError(err)
