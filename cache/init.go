@@ -20,6 +20,8 @@ var (
 
 	RdbVideoFavorite *redis.Client
 	RdbVideoComment  *redis.Client
+	RdbDistLock      *redis.Client
+	RdbUnlockScript  *redis.Script
 )
 
 // InitRedis 初始化Redis连接。
@@ -57,5 +59,11 @@ func InitRedis() {
 		DB:       4, //  将视频评论信息存入 DB4.
 	})
 
+	RdbDistLock = redis.NewClient(&redis.Options{
+		Addr:     address + ":" + port,
+		Password: password,
+		DB:       5, //  将视频点赞信息存入 DB5.
+	})
+	RdbUnlockScript = redis.NewScript(unlockScript)
 	tlog.Info("Redis init success.")
 }
